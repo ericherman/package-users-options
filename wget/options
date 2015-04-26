@@ -5,7 +5,9 @@ function configure_commands()
     ./configure \
       --prefix=/usr \
       --sysconfdir=/etc \
-      --with-ssl=openssl
+      --localstatedir=/var \
+      --without-ssl
+      # --with-ssl=openssl
 }
 
 function make_commands()

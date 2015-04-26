@@ -1,13 +1,18 @@
 #!/bin/bash
+
 function configure_commands()
 {
+  CC="gcc -isystem /usr/include" \
+  LDFLAGS="-Wl,-rpath-link,/usr/lib:/lib" \
   ./configure \
-    --prefix=/usr
+    --prefix=/usr \
+    --docdir=/usr/share/doc/mpc-1.0.2
 }
 
 function make_commands()
 {
-  make
+  make &&
+  make html
 }
 
 function test_commands()
@@ -18,5 +23,6 @@ function test_commands()
 function install_commands()
 {
   make install &&
+  make install-html &&
   echo "INSTALL COMPLETE"
 }

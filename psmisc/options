@@ -19,7 +19,5 @@ function test_commands()
 function install_commands()
 {
   make install &&
-  mv -v /usr/bin/fuser   /bin &&
-  mv -v /usr/bin/killall /bin &&
   echo "INSTALL COMPLETE"
 }

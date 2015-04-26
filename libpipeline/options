@@ -2,10 +2,9 @@
 
 function configure_commands()
 {
-    ./configure \
-      CHECK_CFLAGS=-I/tools/include \
-      CHECK_LIBS="-L/tools/lib -lcheck" \
-      --prefix=/usr
+  PKG_CONFIG_PATH=/tools/lib/pkgconfig \
+   ./configure \
+     --prefix=/usr
 }
 
 function make_commands()

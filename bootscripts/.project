@@ -1,5 +1,7 @@
++make install-bootscripts
 lfs-bootscripts-20120505
 blfs-bootscripts-201205011
+make install-network
 make install-random
 make install-sshd
 make install-service-dhcpcd

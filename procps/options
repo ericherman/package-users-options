@@ -1,8 +1,12 @@
 #!/bin/bash
-
 function configure_commands()
 {
-  sed -i -e 's@\*/module.mk@proc/module.mk ps/module.mk@' Makefile
+  ./configure \
+    --prefix=/usr \
+    --exec-prefix= \
+    --libdir=/usr/lib \
+    --docdir=/usr/share/doc/procps-ng-3.3.9 \
+    --disable-kill
 }
 
 function make_commands()
@@ -12,11 +16,15 @@ function make_commands()
 
 function test_commands()
 {
-  echo "no tests"
+  sed -i -r 's|(pmap_initname)\\\$|\1|' testsuite/pmap.test/pmap.exp &&
+  make check
 }
 
 function install_commands()
 {
   make install &&
+  mv -v /usr/bin/pidof /bin &&
+  mv -v /usr/lib/libprocps.so.* /lib &&
+  ln -sfv ../../lib/$(readlink /usr/lib/libprocps.so) /usr/lib/libprocps.so &&
   echo "INSTALL COMPLETE"
 }

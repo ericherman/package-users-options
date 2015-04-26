@@ -1,10 +1,12 @@
 #!/bin/bash
 function configure_commands()
 {
-  sed -i 's@etc/adjtimer@var/lib/hwclock/sdjtime@g' \
-    hwclock/hwclock.c &&
-  mkdir -p /var/lib/hwclock &&
-  ./configure
+  sed -i -e 's@etc/adjtime@var/lib/hwclock/adjtime@g' \
+    $(grep -rl '/etc/adjtime' .) &&
+  mkdir -pv /var/lib/hwclock &&
+  ./configure \
+    --enable-write \
+    --docdir=/usr/share/doc/util-linux-2.24.2
 }
 
 function make_commands()
@@ -14,7 +16,7 @@ function make_commands()
 
 function test_commands()
 {
-  echo "no tests"
+  echo "tests require chown -Rv nobody, forget it"
 }
 
 function install_commands()

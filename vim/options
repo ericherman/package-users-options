@@ -15,13 +15,13 @@ function make_commands()
 
 function test_commands()
 {
-  echo "skipping make test because it hangs"
+  echo "skipping this"
 }
 
 function install_commands()
 {
   make install &&
   ln -sv vim /usr/bin/vi &&
-  ln -sv ../vim/vim73/doc /usr/share/doc/vim-7.3 &&
+  ln -sv ../vim/vim74/doc /usr/share/doc/vim-7.4 &&
   echo "INSTALL COMPLETE"
 }

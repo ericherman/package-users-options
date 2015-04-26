@@ -1,17 +1,15 @@
 #!/bin/bash
 
+# override CFLAGS, CXXFLAGS, or other environment variables here
+# as needed.
+
 export BUILD_DIR=../build-binutils
 
 function configure_commands()
 {
-  rm -fv ~/binutils-*/etc/standards.info &&
-  sed -i.bak '/^INFO/s/standards.info //' \
-    ~/binutils-*/etc/Makefile.in &&
-  sed -i "/exception_defines.h/d" \
-    ~/binutils-*/ld/testsuite/ld-elf/new.cc &&
-  sed -i "s/-fvtable-gc //" \
-    ~/binutils-*/ld/testsuite/ld-selective/selective.exp &&
-  ../binutils-2.22/configure \
+  CC="gcc -isystem /usr/include" \
+  LDFLAGS="-Wl,-rpath-link,/usr/lib:/lib" \
+  ../binutils-2.24/configure \
     --prefix=/usr \
     --enable-shared
 }
@@ -30,6 +28,6 @@ function test_commands()
 function install_commands()
 {
   make tooldir=/usr install &&
-  cp -v ../binutils*/include/libiberty.h /usr/include &&
+  # cp -v ../binutils*/include/libiberty.h /usr/include &&
   echo "INSTALL COMPLETE"
 }

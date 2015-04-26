@@ -1,13 +1,12 @@
 #!/bin/bash
 function configure_commands()
 {
-  sed -i -e 's/! isatty/isatty/' \
-         -e '45i\              || errno == ENOENT' \
-    gnulib-tests/test-getlogin.c &&
-  FORCE_UNSAFE_CONFIGURE=1 ./configure \
-    --prefix=/usr \
-    --libexecdir=/usr/lib \
-    --enable-no-install-program=kill,uptime
+  FORCE_UNSAFE_CONFIGURE=1 \
+  ./configure \
+   --prefix=/usr \
+    --enable-no-install-program=kill,uptime \
+    --enable-install-program=hostname \
+    --libexecdir=/usr/lib
 }
 
 function make_commands()
@@ -17,23 +16,15 @@ function make_commands()
 
 function test_commands()
 {
-  make check || echo "Darn $? .... Oh, well."
+  make check
 }
 
 function install_commands()
 {
-  make install &&
-  cp -v src/su /bin/su.coreutils &&
-  echo "be FHS compliant" &&
-  mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date} /bin &&
-  mv -v /usr/bin/{dd,df,echo,false,ln,ls,mkdir,mknod} /bin &&
-  mv -v /usr/bin/{mv,pwd,rm,rmdir,stty,true,uname} /bin &&
-  /bin/mv -v /usr/bin/chroot /usr/sbin &&
-  /bin/mv -v /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8 &&
-  sed -i s/\"1\"/\"8\"/1 /usr/share/man/man8/chroot.8 &&
-  echo "move other boot-script-critial programs to /bin" &&
-  /bin/mv -v /usr/bin/{[,basename,head,install,nice} /bin &&
-  /bin/mv -v /usr/bin/{readlink,sleep,sync,test,touch} /bin &&
-  /bin/ln -svf ../../bin/install /usr/bin &&
+  make install || exit $?
+  mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date} /bin
+  mv -v /usr/bin/{dd,df,echo,false,hostname,ln,ls,mkdir,mknod} /bin
+  mv -v /usr/bin/{pwd,rm,rmdir,stty,true,uname} /bin
+  mv -v /usr/bin/chroot /usr/sbin
   echo "INSTALL COMPLETE"
 }

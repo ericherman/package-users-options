@@ -1,8 +1,12 @@
 #!/bin/bash
+
 function configure_commands()
 {
-  ./configure \
-    --prefix=/usr
+  CC="gcc -isystem /usr/include" \
+  CXX="g++ -isystem /usr/include" \
+  LDFLAGS="-Wl,-rpath-link,/usr/lib:/lib" \
+    ./configure \
+      --prefix=/usr
 }
 
 function make_commands()
@@ -19,6 +23,8 @@ function install_commands()
 {
   make install &&
   mv -v /usr/lib/libz.so.* /lib &&
-  ln -svf ../../lib/libz.so.1 /usr/lib/libz.so &&
+  ln -sfv ../../lib/$(readlink /usr/lib/libz.so) /usr/lib/libz.so &&
+  mkdir -pv /usr/share/doc/zlib-1.2.8 &&
+  cp -rv doc/* examples /usr/share/doc/zlib-1.2.8 &&
   echo "INSTALL COMPLETE"
 }

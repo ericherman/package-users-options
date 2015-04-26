@@ -1,0 +1,20 @@
+#!/bin/bash
+
+LINUX_VERSION=$(pwd | cut -d- -f2)
+#echo LINUX_VERSION=$LINUX_VERSION
+
+LOCAL_VERSION=$(grep CONFIG_LOCALVERSION .config | head -n1 | cut -d\" -f2);
+#echo LOCAL_VERSION=$LOCAL_VERSION
+
+#VERSION=3.4.4
+VERSION=${LINUX_VERSION}${LOCAL_VERSION}
+echo VERSION=$VERSION
+
+time {
+  make -j10
+  make -j10 modules_install
+  cp -v arch/x86/boot/bzImage /boot/vmlinuz-${VERSION}
+  cp -v System.map /boot/System.map-${VERSION}
+  cp -v .config /boot/config-${VERSION}
+}
+

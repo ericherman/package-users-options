@@ -2,7 +2,8 @@
 
 function configure_commands()
 {
-  sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile &&
+  sed -i -e 's:ln -s -f $(PREFIX)/bin/:ln -s :' Makefile &&
+  sed -i 's@X)/man@X)/share/man@g' ./Makefile &&
   make -f Makefile-libbz2_so &&
   make clean
 }

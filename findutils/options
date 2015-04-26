@@ -21,7 +21,5 @@ function test_commands()
 function install_commands()
 {
   make install &&
-  mv -v /usr/bin/find /bin &&
-  sed -i 's@find:={BINDIR}@find:=/bin@' /usr/bin/updatedb &&
   echo "INSTALL COMPLETE"
 }

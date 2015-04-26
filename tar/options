@@ -22,6 +22,7 @@ function test_commands()
 function install_commands()
 {
   make install &&
+  perl tarman > /usr/share/man/man1/tar.1 &&
   make -C doc install-html docdir=/usr/share/doc/tar-1.26 &&
   echo "INSTALL COMPLETE"
 }

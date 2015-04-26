@@ -1,10 +1,13 @@
 #!/bin/bash
+
 function configure_commands()
 {
-  ./configure \
-    --prefix=/usr \
-    --enable-shared \
-    --with-gmp=/usr
+  CC="gcc -isystem /usr/include" \
+    LDFLAGS="-Wl,-rpath-link,/usr/lib:/lib" \
+    ./configure \
+      --prefix=/usr \
+      --with-gmp=/usr \
+      --docdir=/usr/share/doc/mpfr-3.1.2
 }
 
 function make_commands()
@@ -20,7 +23,5 @@ function test_commands()
 function install_commands()
 {
   make install &&
-  make html &&
-  make install-html &&
   echo "INSTALL COMPLETE"
 }

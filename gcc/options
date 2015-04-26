@@ -4,32 +4,22 @@ export BUILD_DIR=../build-gcc
 
 function configure_commands()
 {
-  #  --enable-languages=c,c++ \
-  echo '  Apply a sed substitution that will suppress the installation' &&
-  echo '  of libiberty.a. The version of libiberty.a provided by Binutils' &&
-  echo '   will be used instead:' &&
-  sed -i 's/install_to_$(INSTALL_DEST) //' \
-    ~/gcc*/libiberty/Makefile.in
-  sed -i 's/^T_CFLAGS =$/& -fomit-frame-pointer/' \
-    ~/gcc*/gcc/Makefile.in &&
-  echo 'The fixincludes script is known to occasionally erroneously' &&
-  echo ' attempt to "fix" the system headers installed so far.' &&
-  echo ' As the headers up to this point are known to not require fixing,' &&
-  echo ' issue the following command to prevent the fixincludes script' &&
-  echo ' from running:' &&
-  sed -i 's@\./fixinc\.sh@-c true@' \
-    ~/gcc*/gcc/Makefile.in &&
-  ../gcc*/configure \
-    --prefix=/usr            \
-    --libexecdir=/usr/lib    \
-    --enable-shared          \
-    --enable-threads=posix   \
-    --enable-__cxa_atexit    \
-    --enable-clocale=gnu     \
-    --enable-languages=all,go \
-    --disable-multilib       \
-    --disable-bootstrap      \
-    --with-system-zlib
+  sed -i 's@\./fixinc\.sh@-c true@' ../gcc-*/gcc/Makefile.in &&
+  SED=sed CC="gcc -isystem /usr/include" \
+  CXX="g++ -isystem /usr/include" \
+  LDFLAGS="-Wl,-rpath-link,/usr/lib:/lib" \
+  ../gcc-4.8.3/configure \
+    --prefix=/usr \
+    --libexecdir=/usr/lib \
+    --enable-threads=posix \
+    --enable-__cxa_atexit \
+    --enable-clocale=gnu \
+    --enable-languages=c,c++ \
+    --disable-multilib \
+    --disable-libstdcxx-pch \
+    --with-system-zlib \
+    --enable-checking=release \
+    --enable-libstdcxx-time
 }
 
 function make_commands()
@@ -39,7 +29,7 @@ function make_commands()
 
 function test_commands()
 {
-  ulimit -s 16384 &&
+  ulimit -s 32768 &&
   make -k check || echo "DARN $? oh well...."
   ../gcc*/contrib/test_summary | grep -A7 Summ
 }
@@ -47,7 +37,9 @@ function test_commands()
 function install_commands()
 {
   make install &&
-#  ln -sv ../usr/bin/cpp /lib &&
-#  ln -sv gcc /usr/bin/cc &&
+  cp -v ../gcc-4.8.3/include/libiberty.h /usr/include &&
+  ln -sv ../usr/bin/cpp /lib &&
+  ln -sv gcc /usr/bin/cc &&
+  mv -v /usr/lib/libstdc++*gdb.py /usr/share/gdb/auto-load/usr/lib &&
   echo "INSTALL COMPLETE"
 }

@@ -7,7 +7,7 @@ function configure_commands()
     --bindir=/bin \
     --without-bash-malloc \
     --with-installed-readline \
-    --htmldir=/usr/share/doc/bash-4.2
+    --docdir=/usr/share/doc/bash-4.3
 }
 
 function make_commands()
@@ -22,6 +22,6 @@ function test_commands()
 
 function install_commands()
 {
-  make htmldir=/usr/share/doc/bash-4.2 install &&
+  make install &&
   echo "INSTALL COMPLETE"
 }

@@ -2,21 +2,21 @@
 
 function configure_commands()
 {
- echo "no configure"
+  false
 }
 
 function make_commands()
 {
- echo "no make"
+  : make
 }
 
 function test_commands()
 {
-  echo "no make check"
+  : make check
 }
 
 function install_commands()
 {
-  make install
-  echo "INSTALL COMPLETE"
+  : make install-bootscripts &&
+  : echo "INSTALL COMPLETE"
 }

@@ -4,7 +4,7 @@ function configure_commands()
   ./configure \
     --prefix=/usr \
     --bindir=/bin \
-    --htmldir=/usr/share/doc/sed-4.2.1
+    --docdir=/usr/share/doc/sed-4.2.2
 }
 
 function make_commands()

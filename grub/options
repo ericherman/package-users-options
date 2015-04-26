@@ -1,20 +1,9 @@
 #!/bin/bash
 
-unset CFLAGS
-unset CXXFLAGS
-
-export CFLAGS
-export CXXFLAGS
-
-
 function configure_commands()
 {
   ./configure \
-    --prefix=/usr \
-    --sysconfdir=/etc \
-    --disable-grub-emu-usb \
-    --disable-efiemu \
-    --disable-werror
+    --prefix=/usr
 }
 
 function make_commands()
@@ -24,7 +13,7 @@ function make_commands()
 
 function test_commands()
 {
-  make -k check || echo "DARN $? ... oh well."
+  make check
 }
 
 function install_commands()

@@ -4,13 +4,12 @@ function configure_commands()
 {
   sed -i '/^TARGETS/s@arpd@@g' misc/Makefile &&
   sed -i /ARPD/d Makefile &&
-  rm man/man8/arpd.8
+  sed -i 's/arpd.8//' man/man8/Makefile
 }
 
 function make_commands()
 {
-  make DESTDIR= DOCDIR=/usr/share/doc/iproute2 \
-    MANDIR=/usr/share/man
+  make
 }
 
 function test_commands()
@@ -20,7 +19,6 @@ function test_commands()
 
 function install_commands()
 {
-  make DESTDIR= DOCDIR=/usr/share/doc/iproute2 \
-    MANDIR=/usr/share/man install &&
+  make DOCDIR=/usr/share/doc/iproute2-3.14.0 install &&
   echo "INSTALL COMPLETE"
 }

@@ -2,9 +2,11 @@
 
 function configure_commands()
 {
-  sed -i '/guardado\ el/s/\(^.*en\ %\)\(.*\)/\14\$\2/' po/es.po &&
-  ./configure \
-    --prefix=/usr
+  PKG_CONFIG_PATH="/tools/lib/pkgconfig" \
+    ./configure \
+      --prefix=/usr \
+      --disable-vlock \
+      --enable-optional-progs
 }
 
 function make_commands()
@@ -14,14 +16,14 @@ function make_commands()
 
 function test_commands()
 {
-  echo "no test"
+  make check
 }
 
 function install_commands()
 {
   make install &&
-  mv -v /usr/bin/{kbd_mode,dumpkeys,loadkeys,openvt,setfont} /bin &&
-  mkdir -v /usr/share/doc/kbd-1.15.3 &&
-  cp -R -v doc/* /usr/share/doc/kbd-1.15.3 &&
+  mv -v /usr/bin/{dumpkeys,kbd_mode,loadkeys,setfont} /bin &&
+  mkdir -v /usr/share/doc/kbd-2.0.1 &&
+  cp -R -v docs/doc/* /usr/share/doc/kbd-2.0.1 &&
   echo "INSTALL COMPLETE"
 }

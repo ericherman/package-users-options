@@ -3,8 +3,8 @@
 function configure_commands()
 {
   ./configure \
-    --prefix=/usr &&
-  echo '#define YYENABLE_NLS 1' >> config.h
+    --prefix=/usr
+  # echo '#define YYENABLE_NLS 1' >> config.h
 }
 
 function make_commands()

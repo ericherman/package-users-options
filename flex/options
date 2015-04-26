@@ -3,7 +3,8 @@
 function configure_commands()
 {
   ./configure \
-    --prefix=/usr
+    --prefix=/usr \
+    --docdir=/usr/share/doc/flex-2.5.39
 }
 
 function make_commands()
@@ -13,21 +14,13 @@ function make_commands()
 
 function test_commands()
 {
-  make check
+  echo "The test suite will report 3 failures for tests that use bison,"
+  echo " which is not installed yet."
+  make -k check || echo "nevermind"
 }
 
 function install_commands()
 {
   make install &&
-  ln -sv libfl.a /usr/lib/libl.a &&
-  cat > /usr/bin/lex << "EOF"
-#!/bin/sh
-# Begin /usr/bin/lex
-
-exec /usr/bin/flex -l "$@"
-
-# End /usr/bin/lex
-EOF
-  chmod -v 755 /usr/bin/lex &&
   echo "INSTALL COMPLETE"
 }
