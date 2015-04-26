@@ -1,0 +1,47 @@
+#!/bin/bash
+
+function configure_commands()
+{
+
+#    --disable-gudev \
+
+  tar xf ~/udev-config-* &&
+  BLKID_CFLAGS="-I/usr/include/blkid" \
+  BLKID_LIBS="-L/lib -lblkid" \
+  KMOD_CFLAGS="-I/usr/include" \
+  KMOD_LIBS="-L/lib -lkmod" \
+  ./configure \
+    --prefix=/usr \
+    --with-rootprefix='' \
+    --bindir=/sbin \
+    --sysconfdir=/etc \
+    --libexecdir=/lib \
+    --enable-rule_generator \
+    --disable-introspection \
+    --disable-keymap \
+    --with-usb-ids-path=no \
+    --with-pci-ids-path=no \
+    --with-systemdsystemunitdir=no
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make install &&
+  rmdir -v /usr/share/doc/udev &&
+  cd udev-config-* &&
+  make install &&
+  make install-doc &&
+  # add a test for /lib/firmware?
+  # install -dv /lib/firmware &&
+  echo "INSTALL COMPLETE"
+}

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr \
+    --disable-static \
+    --libdir=/lib \
+    --docdir=/usr/share/doc/pcre-8.30 \
+    --enable-utf8 \
+    --enable-unicode-properties \
+    --enable-pcregrep-libz \
+    --enable-pcregrep-libbz2
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make install &&
+  mv /lib/pkgconfig/libpcre*.pc /usr/lib/pkgconfig &&
+  echo "INSTALL COMPLETE"
+}

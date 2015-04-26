@@ -1,0 +1,85 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  cd source3 &&
+  sed -i \
+    -e "s/python2.6 python2.5/python2.7 &/" \
+    -e "s/python2.6-config python2.5-config/python2.7-config &/" \
+     configure &&
+  ./configure                          \
+    --prefix=/usr                      \
+    --sysconfdir=/etc                  \
+    --localstatedir=/var               \
+    --with-piddir=/run/samba           \
+    --with-pammodulesdir=/lib/security \
+    --with-fhs                         \
+    --enable-nss-wrapper               \
+    --enable-socket-wrapper            &&
+  sed -i "s/-ldl/& -ltirpc -lpthread/" Makefile
+}
+
+function make_commands()
+{
+  cd source3 &&
+  make
+}
+
+function test_commands()
+{
+  cd source3 &&
+  make test
+}
+
+function install_commands()
+{
+  cd source3 &&
+  make install &&
+  install -v -m644 pkgconfig/*.pc /usr/lib/pkgconfig        &&
+  install -v -m755 ../nsswitch/libnss_win{s,bind}.so /lib   &&
+  ln -v -sf libnss_winbind.so /lib/libnss_winbind.so.2      &&
+  ln -v -sf libnss_wins.so    /lib/libnss_wins.so.2         &&
+  install -v -m644 ../examples/smb.conf.default /etc/samba  &&
+  if [ -d /etc/openldap/schema ]; then
+    install -v -m644    ../examples/LDAP/README              \
+                        /etc/openldap/schema/README.LDAP     &&
+    install -v -m644    ../examples/LDAP/samba*              \
+                        /etc/openldap/schema                 &&
+    install -v -m755    ../examples/LDAP/{convert*,get*,ol*} \
+                        /etc/openldap/schema                 &&
+    echo "ldap done"
+  fi &&
+  install -v -m755 -d /usr/share/doc/samba-3.6.12 &&
+  install -v -m644    ../docs/*.pdf \
+                      /usr/share/doc/samba-3.6.12 &&
+  ln -v -s ../../samba/swat  /usr/share/doc/samba-3.6.12 &&
+  echo "INSTALL COMPLETE"
+}
+
+
+# override CFLAGS, CXXFLAGS, or other environment variables here
+# as needed.
+#
+# If the package needs to be built from a directory other than
+# the source directory, set BUILD_DIR appropriately (for example:
+# 'export BUILD_DIR=../build-binutils')
+#
+# You may copy a source tarball into a "src" subdirectory, and
+# put patches into a "patches" subdirectory, in which case the
+# build script will unpack and patch the source for you.
+# Alternatively, you can prepare the source yourself (and cd into
+# the source directory) before running build.
+#
+# If necessary, redefine the build functions:
+#   configure_commands, make_commands, test_commands, install_commands
+#
+# If this package has external dependencies, such as requiring
+# special users or groups to exist, verify that the dependencies
+# are met in initial_checkup (echo problem notifications and exit
+# if they are not).
+#
+# Look at ~/.bash_profile for syntax help.  Re-source the options
+# file afterward!
+#
+# Run "declare -f" to find out the current function definitions.
+#

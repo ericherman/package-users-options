@@ -1,0 +1,34 @@
+#!/bin/bash
+
+unset MAKEFLAGS
+
+export OPENSSL_VERSION="1.0.1g"
+
+function configure_commands()
+{
+  ./config \
+    --prefix=/usr \
+    --openssldir=/etc/ssl \
+    shared
+}
+
+function make_commands()
+{
+  make MANDIR=/usr/share/man
+}
+
+function test_commands()
+{
+  echo "no make check"
+}
+
+function install_commands()
+{
+  make MANDIR=/usr/share/man install &&
+  # ln -sv ../../etc/ssl /usr/share &&
+  cp -v -r certs /etc/ssl &&
+  install -m755 -d -v /usr/share/doc/openssl-${OPENSSL_VERSION} &&
+  cp -v -r doc/{HOWTO,README,*.{txt,html,gif}} \
+    /usr/share/doc/openssl-${OPENSSL_VERSION} &&
+  echo "INSTALL COMPLETE"
+}

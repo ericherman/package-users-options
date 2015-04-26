@@ -1,0 +1,39 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr \
+    --docdir=/usr/share/doc/gperf-3.0.4
+}
+
+function make_commands()
+{
+  make &&
+  makeinfo -o doc/gperf.txt --plaintext doc/gperf.texi
+}
+
+function test_commands()
+{
+  make -j 1 check
+}
+
+function install_commands()
+{
+  make install &&
+  install -m644 -v doc/gperf.{dvi,ps,pdf,txt} \
+                 /usr/share/doc/gperf-3.0.4 &&
+  pushd /usr/share/info &&
+  for FILENAME in *; do
+    case $FILENAME in
+     dir )
+         echo "skipping $FILENAME"
+         ;;
+     * )
+         install-info $FILENAME dir 2>/dev/null
+         ;;
+   esac
+  done &&
+  popd &&
+  echo "INSTALL COMPLETE"
+}

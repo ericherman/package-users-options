@@ -1,0 +1,27 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h &&
+  ./configure \
+    --prefix=/usr \
+    --enable-multibyte
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  echo "skipping make test because it hangs"
+}
+
+function install_commands()
+{
+  make install &&
+  ln -sv vim /usr/bin/vi &&
+  ln -sv ../vim/vim73/doc /usr/share/doc/vim-7.3 &&
+  echo "INSTALL COMPLETE"
+}

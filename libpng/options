@@ -1,0 +1,28 @@
+#!/bin/bash
+
+export LIBPNG_VESION=1.6.10
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr \
+    --disable-static
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make test || echo "Darn $? Oh, well ...."
+}
+
+function install_commands()
+{
+  make install &&
+  mkdir -v /usr/share/doc/libpng-${LIBPNG_VESION} &&
+  cp -v README libpng-manual.txt /usr/share/doc/libpng-${LIBPNG_VESION} &&
+  echo "INSTALL COMPLETE"
+}

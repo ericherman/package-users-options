@@ -1,0 +1,23 @@
+#!/bin/bash
+function configure_commands()
+{
+  make mrproper
+}
+
+function make_commands()
+{
+  make headers_check
+}
+
+function test_commands()
+{
+  echo "no test"
+}
+
+function install_commands()
+{
+  make INSTALL_HDR_PATH=dest headers_install &&
+  find dest/include \( -name .install -o -name ..install.cmd \) -delete &&
+  cp -rv dest/include/* /usr/include &&
+  echo "INSTALL COMPLETE"
+}

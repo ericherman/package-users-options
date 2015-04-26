@@ -1,0 +1,25 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  echo "make check works only after it has been installed"
+}
+
+function install_commands()
+{
+  make install &&
+  install -v -m755 -d /usr/share/doc/expat-2.1.0 &&
+  install -v -m644 doc/*.{html,png,css} /usr/share/doc/expat-2.1.0 &&
+  echo "INSTALL COMPLETE"
+}

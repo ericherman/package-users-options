@@ -1,0 +1,37 @@
+#!/bin/bash
+export BUILD_DIR=build
+
+function configure_commands()
+{
+  PKG_CONFIG=/tools/bin/true \
+  LDFLAGS="-lblkid -luuid" \
+  ../configure \
+    --prefix=/usr \
+    --with-root-prefix="" \
+    --enable-elf-shlibs \
+    --disable-libblkid \
+    --disable-libuuid \
+    --disable-fsck \
+    --disable-uuidd
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make install &&
+  make install-libs &&
+  chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a &&
+  gunzip -v /usr/share/info/libext2fs.info.gz &&
+  install-info --dir-file=/usr/share/info/dir \
+    /usr/share/info/libext2fs.info &&
+  echo "INSTALL COMPLETE"
+}

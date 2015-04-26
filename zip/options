@@ -1,0 +1,22 @@
+#!/bin/bash
+
+function configure_commands()
+{
+    echo "no configure"
+}
+
+function make_commands()
+{
+  make -f unix/Makefile generic_gcc
+}
+
+function test_commands()
+{
+  echo "no make check"
+}
+
+function install_commands()
+{
+  make prefix=/usr -f unix/Makefile install &&
+  echo "INSTALL COMPLETE"
+}

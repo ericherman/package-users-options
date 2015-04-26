@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --sysconfdir=/etc \
+    --dbdir=/run \
+    --libexecdir=/lib/dhcpcd
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  echo "no make check"
+}
+
+function install_commands()
+{
+  make install && 
+  sed -i "s;/var/lib;/run;g" dhcpcd-hooks/50-dhcpcd-compat &&
+  install -v -m 644 \
+    dhcpcd-hooks/50-dhcpcd-compat /lib/dhcpcd/dhcpcd-hooks/ &&
+  echo "INSTALL COMPLETE"
+}

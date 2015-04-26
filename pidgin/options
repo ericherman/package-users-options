@@ -1,0 +1,39 @@
+#!/bin/bash
+
+function configure_commands()
+{
+#  --with-gconf-schema-file-dir=$GNOME_SYSCONFDIR/gconf/schemas
+#  --disable-dbus
+#  --disable-gnutls
+#  --disable-gtkspell \
+#  --disable-gstreamer
+#  --disable-avahi \
+  ./configure \
+   --prefix=/usr \
+   --sysconfdir=/etc \
+   --disable-screensaver \
+   --disable-meanwhile \
+   --disable-nm \
+   --disable-tcl \
+   --disable-nss \
+   --disable-idn \
+   --disable-vv
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make -k check || echo "DARN $?"
+}
+
+function install_commands()
+{
+  make install &&
+  mkdir -p /usr/share/doc/pidgin-2.10.2 &&
+  cp -v README doc/gtkrc-2.0 /usr/share/doc/pidgin-2.10.2 &&
+  echo "INSTALL COMPLETE"
+}

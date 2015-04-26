@@ -1,0 +1,32 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  echo "no ./configure"
+}
+
+function make_commands()
+{
+  cp -v unix/Makefile{,.orig}
+  case `uname -m` in
+    i?86)
+      sed -i -e 's/DASM"/DASM -DNO_LCHMOD"/' unix/Makefile
+      make -f unix/Makefile linux
+      ;;
+    *)
+      sed -i -e 's/CFLAGS="-O -Wall/& -DNO_LCHMOD/' unix/Makefile
+      make -f unix/Makefile linux_noasm
+      ;;
+  esac
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make prefix=/usr install &&
+  echo "INSTALL COMPLETE"
+}

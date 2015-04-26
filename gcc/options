@@ -1,0 +1,53 @@
+#!/bin/bash
+
+export BUILD_DIR=../build-gcc
+
+function configure_commands()
+{
+  #  --enable-languages=c,c++ \
+  echo '  Apply a sed substitution that will suppress the installation' &&
+  echo '  of libiberty.a. The version of libiberty.a provided by Binutils' &&
+  echo '   will be used instead:' &&
+  sed -i 's/install_to_$(INSTALL_DEST) //' \
+    ~/gcc*/libiberty/Makefile.in
+  sed -i 's/^T_CFLAGS =$/& -fomit-frame-pointer/' \
+    ~/gcc*/gcc/Makefile.in &&
+  echo 'The fixincludes script is known to occasionally erroneously' &&
+  echo ' attempt to "fix" the system headers installed so far.' &&
+  echo ' As the headers up to this point are known to not require fixing,' &&
+  echo ' issue the following command to prevent the fixincludes script' &&
+  echo ' from running:' &&
+  sed -i 's@\./fixinc\.sh@-c true@' \
+    ~/gcc*/gcc/Makefile.in &&
+  ../gcc*/configure \
+    --prefix=/usr            \
+    --libexecdir=/usr/lib    \
+    --enable-shared          \
+    --enable-threads=posix   \
+    --enable-__cxa_atexit    \
+    --enable-clocale=gnu     \
+    --enable-languages=all,go \
+    --disable-multilib       \
+    --disable-bootstrap      \
+    --with-system-zlib
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  ulimit -s 16384 &&
+  make -k check || echo "DARN $? oh well...."
+  ../gcc*/contrib/test_summary | grep -A7 Summ
+}
+
+function install_commands()
+{
+  make install &&
+#  ln -sv ../usr/bin/cpp /lib &&
+#  ln -sv gcc /usr/bin/cc &&
+  echo "INSTALL COMPLETE"
+}

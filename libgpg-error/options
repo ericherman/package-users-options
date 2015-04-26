@@ -1,0 +1,24 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make install &&
+  install -v -m644 -D README /usr/share/doc/libgpg-error-1.10/README &&
+  echo "INSTALL COMPLETE"
+}

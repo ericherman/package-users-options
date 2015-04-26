@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in &&
+  sed -i 's#.*@man_#man_#' docs/reference/gtk/Makefile.in &&
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  echo "can not 'make check' without X"
+}
+
+function install_commands()
+{
+  make install &&
+  mkdir -pv /usr/share/doc/gtk+-2.24.10 &&
+  cp -v -R docs/faq/html      /usr/share/doc/gtk+-2.24.10/faq &&
+  cp -v -R docs/tutorial/html /usr/share/doc/gtk+-2.24.10/tutorial &&
+  install -v -m644 docs/*.txt /usr/share/doc/gtk+-2.24.10 &&
+  echo "INSTALL COMPLETE"
+}

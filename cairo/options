@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# LATER come back and rebuild with more good stuff:
+#   --enable-gl: Enable Cairo's OpenGL backend.
+#   --enable-vg: Enable the Cairo OpenVG backend
+#                (requires MesaLib-8.0.2 installed,
+#                 configured with --enable-gallium-egl
+#                 and --enable-openvg).
+#   --enable-gtk-doc
+
+function configure_commands()
+{
+  sed -i 's#check-plt.sh ##' src/Makefile.in &&
+  ./configure \
+    --prefix=/usr \
+    --disable-static \
+    --enable-tee \
+    --enable-xcb
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  echo "Skipping 'make -k check' tests take a long time to run, many of them fail for unknown reasons and it has been known to cause a kernel panic."
+}
+
+function install_commands()
+{
+  make install &&
+  echo "INSTALL COMPLETE"
+}

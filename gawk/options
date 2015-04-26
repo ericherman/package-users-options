@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr \
+    --libexecdir=/usr/lib
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make install &&
+  mkdir -v /usr/share/doc/gawk-4.0.1 &&
+  cp -v doc/{awkforai.txt,*.{eps,pdf,jpg}} /usr/share/doc/gawk-4.0.1 &&
+  echo "INSTALL COMPLETE"
+}

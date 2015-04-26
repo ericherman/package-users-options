@@ -1,0 +1,33 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  PKG_CONFIG=/tools/bin/true \
+  libpipeline_CFLAGS='' \
+  libpipeline_LIBS='-lpipeline' \
+  ./configure \
+     --prefix=/usr                        \
+     --libexecdir=/usr/lib                \
+     --docdir=/usr/share/doc/man-db-2.6.1 \
+     --sysconfdir=/etc                    \
+     --disable-setuid                     \
+     --with-browser=/usr/bin/lynx         \
+     --with-vgrind=/usr/bin/vgrind        \
+     --with-grap=/usr/bin/grap
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make install &&
+  echo "INSTALL COMPLETE"
+}

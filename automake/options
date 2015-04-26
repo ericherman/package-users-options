@@ -1,0 +1,25 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr
+}
+
+function make_commands()
+{
+  make &&
+  sed -i -e "s/yacc/lex/" t/lex-clean.sh &&
+  sed -i -e "s/cc/'non-root cc'/" t/dist-readonly.sh
+}
+
+function test_commands()
+{
+  make -k check || echo "Darn $? .... Oh, well."
+}
+
+function install_commands()
+{
+  make install &&
+  echo "INSTALL COMPLETE"
+}

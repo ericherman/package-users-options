@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  sed -i "s/ndbm_libs = \[\]/ndbm_libs = ['gdbm', 'gdbm_compat']/" \
+     setup.py &&
+  ./configure \
+    --prefix=/usr \
+    --enable-shared \
+    --with-system-ffi
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make test || echo "DARN $? ... nevermind."
+}
+
+function install_commands()
+{
+  make install &&
+  chmod -v 755 /usr/lib/libpython2.7.so.1.0 &&
+  echo "INSTALL COMPLETE"
+}

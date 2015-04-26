@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr \
+    --libdir=/lib \
+    --docdir=/usr/share/doc/xz-5.0.3
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make install &&
+  mv -v /usr/bin/{xz,lzma,lzcat,unlzma,unxz,xzcat} /bin &&
+  echo "INSTALL COMPLETE"
+}

@@ -1,0 +1,17 @@
+#!/bin/bash
+configure_commands() {
+  ./configure \
+    --prefix=/usr \
+    --with-sdl \
+    --enable-unicode
+}
+
+test_commands() {
+  echo "no make check"
+}
+
+install_commands() {
+  make install &&
+  cp -v include/msvc/wx/setup.h /usr/include/wx-2.9/wx &&
+  echo "INSTALL COMPLETE"
+}

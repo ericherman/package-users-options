@@ -1,0 +1,25 @@
+#!/bin/bash
+function configure_commands()
+{
+  ABI=32 ./configure --prefix=/usr --enable-cxx --enable-mpbsd
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check 2>&1 | tee gmp-check-log &&
+  awk '/tests passed/{total+=$2} ; END{print total}' gmp-check-log
+}
+
+function install_commands()
+{
+  make install &&
+  mkdir -v /usr/share/doc/gmp-5.0.4 &&
+  cp    -v doc/{isa_abi_headache,configuration} doc/*.html \
+           /usr/share/doc/gmp-5.0.4 &&
+  echo "INSTALL COMPLETE"
+}

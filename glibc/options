@@ -1,0 +1,50 @@
+#!/bin/bash
+
+export BUILD_DIR=../build-glibc
+export unset CHOST
+export unset CLFAGS
+export unset CXXFLAGS
+
+function configure_commands()
+{
+  DL=$(readelf -l /bin/sh | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p') &&
+  echo "dynamic-linker=$DL" &&
+  sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" \
+    ../glibc-*/scripts/test-installation.pl &&
+  unset DL &&
+  sed -i -e 's/"db1"/& \&\& $name ne "nss_test1"/' \
+    ../glibc-*/scripts/test-installation.pl &&
+  sed -i 's|@BASH@|/bin/bash|' ../glibc-*/elf/ldd.bash.in &&
+  echo "CFLAGS += -march=i486 -mtune=native -O3 -pipe" > configparms &&
+  ../glibc-*/configure  \
+    --prefix=/usr          \
+    --disable-profile      \
+    --enable-add-ons       \
+    --enable-kernel=3.2 \
+    --libexecdir=/usr/lib/glibc
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  if (false) then
+      cp -v ../glibc-*/iconvdata/gconv-modules iconvdata &&
+      make -k check 2>&1 | tee glibc-check-log &&
+      grep Error glibc-check-log
+  fi
+  echo "whatever"
+}
+
+function install_commands()
+{
+  touch /etc/ld.so.conf &&
+  make install &&
+  cp -v ../glibc-*/sunrpc/rpc/*.h /usr/include/rpc &&
+  cp -v ../glibc-*/sunrpc/rpcsvc/*.h /usr/include/rpcsvc &&
+  cp -v ../glibc-*/nis/rpcsvc/*.h /usr/include/rpcsvc &&
+  echo "INSTALL COMPLETE"
+}

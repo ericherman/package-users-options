@@ -1,0 +1,27 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr \
+    --bindir=/bin \
+    --without-bash-malloc \
+    --with-installed-readline \
+    --htmldir=/usr/share/doc/bash-4.2
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  : # make tests # this is broken: just dies
+}
+
+function install_commands()
+{
+  make htmldir=/usr/share/doc/bash-4.2 install &&
+  echo "INSTALL COMPLETE"
+}

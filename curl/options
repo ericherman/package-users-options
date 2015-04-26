@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  sed -i '/--static-libs)/{N;s#echo .*#echo #;}' curl-config.in &&
+  ./configure \
+    --prefix=/usr \
+    --disable-static \
+    --with-ca-path=/etc/ssl/certs
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make -k check || echo "DARN $? .... Oh, well."
+}
+
+function install_commands()
+{
+  make install &&
+  find docs -name "Makefile*" -o -name "*.1" -o -name "*.3" | xargs rm &&
+  install -v -d -m755 /usr/share/doc/curl-7.25.0 &&
+  cp -v -R docs/* /usr/share/doc/curl-7.25.0 &&
+  echo "INSTALL COMPLETE"
+}

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  sed -i '/v0/,+1s/new:/new:kb=^?:/' termcap &&
+  echo -e '\tkbs=\\177,' >>terminfo &&
+  TERMINFO=/usr/share/terminfo \
+    ./configure \
+      $XORG_CONFIG \
+      --enable-luit --enable-wide-chars \
+      --with-app-defaults=/etc/X11/app-defaults
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  echo "no make check"
+}
+
+function install_commands()
+{
+  make install &&
+  make install-ti &&
+  echo "INSTALL COMPLETE"
+}

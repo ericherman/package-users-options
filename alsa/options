@@ -1,0 +1,25 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  ./configure \
+    --prefix=/usr
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  echo "no make check"
+}
+
+function install_commands()
+{
+  make install &&
+  install -v -m644 -D doc/asoundrc.txt \
+    /usr/share/doc/alsa-lib-1.0.26/asoundrc.txt &&
+  echo "INSTALL COMPLETE"
+}
