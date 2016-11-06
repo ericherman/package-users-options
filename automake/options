@@ -3,31 +3,19 @@
 function configure_commands()
 {
   ./configure \
-    --prefix=/usr \
-    --docdir=/usr/share/doc/automake-1.14.1
+    --prefix=/usr
 }
 
 function make_commands()
 {
-  make
-  # sed -i -e "s/yacc/lex/" t/lex-clean.sh &&
-  # sed -i -e "s/cc/'non-root cc'/" t/dist-readonly.sh
+  make &&
+  sed -i -e "s/yacc/lex/" t/lex-clean.sh &&
+  sed -i -e "s/cc/'non-root cc'/" t/dist-readonly.sh
 }
 
 function test_commands()
 {
-#  make -k check || echo "Darn $? .... Oh, well."
-# TOTAL: 2981
-# PASS:  2802
-# SKIP:  137
-# XFAIL: 40
-# FAIL:  2
-# XPASS: 0
-# ERROR: 0
-
-# 02-test.log:FAIL: t/lex-clean-cxx.sh
-# 02-test.log:FAIL: t/lex-depend-cxx.sh
-:
+  make -k check || echo "Darn $? .... Oh, well."
 }
 
 function install_commands()
