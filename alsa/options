@@ -13,13 +13,13 @@ function make_commands()
 
 function test_commands()
 {
-  echo "no make check"
+  make -k check
 }
 
 function install_commands()
 {
   make install &&
   install -v -m644 -D doc/asoundrc.txt \
-    /usr/share/doc/alsa-lib-1.0.26/asoundrc.txt &&
+    /usr/share/doc/alsa-lib-1.1.2/asoundrc.txt &&
   echo "INSTALL COMPLETE"
 }
