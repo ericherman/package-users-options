@@ -6,11 +6,14 @@ function configure_commands()
     --prefix=/usr \
     --disable-static \
     --libdir=/lib \
-    --docdir=/usr/share/doc/pcre-8.30 \
+    --docdir=/usr/share/doc/pcre-8.39 \
     --enable-utf8 \
     --enable-unicode-properties \
+    --enable-pcre16 \
+    --enable-pcre32 \
     --enable-pcregrep-libz \
-    --enable-pcregrep-libbz2
+    --enable-pcregrep-libbz2 \
+    --enable-pcretest-libreadline
 }
 
 function make_commands()

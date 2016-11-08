@@ -1,0 +1,30 @@
+#!/bin/bash
+
+SOURCE_DIR_PREFIX=autoconf-
+
+function configure_commands()
+{
+  mv -v autoconf.texi autoconf213.texi &&
+  rm -v autoconf.info &&
+  ./configure \
+    --prefix=/usr \
+    --program-suffix=2.13
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make install &&
+  install -v -m644 autoconf213.info /usr/share/info &&
+  install-info --info-dir=/usr/share/info autoconf213.info &&
+  echo "INSTALL COMPLETE"
+}

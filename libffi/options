@@ -2,8 +2,14 @@
 
 function configure_commands()
 {
+  sed -e '/^includesdir/ s/$(libdir).*$/$(includedir)/' \
+    -i include/Makefile.in &&
+  sed -e '/^includedir/ s/=.*$/=@includedir@/' \
+    -e 's/^Cflags: -I${includedir}/Cflags:/' \
+    -i libffi.pc.in &&
     ./configure \
-      --prefix=/usr
+      --prefix=/usr \
+      --disable-static
 }
 
 function make_commands()
@@ -13,7 +19,7 @@ function make_commands()
 
 function test_commands()
 {
-  echo "no make check"
+  make -k check || echo "DARN $? ... oh, well."
 }
 
 function install_commands()
