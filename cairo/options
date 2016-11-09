@@ -10,7 +10,7 @@
 
 function configure_commands()
 {
-  sed -i 's#check-plt.sh ##' src/Makefile.in &&
+  # sed -i 's#check-plt.sh ##' src/Makefile.in &&
   ./configure \
     --prefix=/usr \
     --disable-static \
