@@ -1,2 +1,2 @@
-libpng-1.5.14
-patches/libpng-1.5.14-apng.patch
+libpng-1.6.24
+/usr/src/libpng/patches/libpng-1.6.24-apng.patch

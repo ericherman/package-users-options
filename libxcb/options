@@ -2,11 +2,11 @@
 
 function configure_commands()
 {
-  sed -ri "s:.*(AUX_MODULES.*valid):\1:" modules.cfg &&
-  sed -ri "s:.*(#.*SUBPIXEL_(RENDERING|HINTING 2)) .*:\1:g" \
-    include/freetype/config/ftoption.h  &&
-  ./configure \
-    --prefix=/usr
+  sed -i "s/pthread-stubs//" configure &&
+  ./configure $XORG_CONFIG      \
+     --enable-xinput \
+     --without-doxygen \
+     --docdir='${datadir}'/doc/libxcb-1.12
 }
 
 function make_commands()

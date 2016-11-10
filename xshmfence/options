@@ -2,11 +2,7 @@
 
 function configure_commands()
 {
-  sed -ri "s:.*(AUX_MODULES.*valid):\1:" modules.cfg &&
-  sed -ri "s:.*(#.*SUBPIXEL_(RENDERING|HINTING 2)) .*:\1:g" \
-    include/freetype/config/ftoption.h  &&
-  ./configure \
-    --prefix=/usr
+  ./configure $XORG_CONFIG
 }
 
 function make_commands()
