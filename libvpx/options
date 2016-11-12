@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export BUILD_DIR=../build-libvpx
+export BUILD_DIR=$HOME/build-libvpx
 
 function configure_commands()
 {

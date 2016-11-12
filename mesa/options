@@ -1,0 +1,40 @@
+#!/bin/bash
+
+function configure_commands()
+{
+  #GLL_DRV="nouveau,r300,r600,radeonsi,svga,swrast,swr" &&
+  GLL_DRV="r300,r600,radeonsi,svga,swrast,swr" &&
+  sed -i "/pthread-stubs/d" configure.ac &&
+  sed -i "/seems to be moved/s/^/: #/" bin/ltmain.sh &&
+  ./autogen.sh \
+    CFLAGS='-O2' \
+    CXXFLAGS='-O2' \
+    --prefix=$XORG_PREFIX \
+    --sysconfdir=/etc \
+    --enable-texture-float \
+    --enable-gles1 \
+    --enable-gles2 \
+    --enable-osmesa \
+    --enable-xa \
+    --enable-gbm \
+    --enable-glx-tls \
+    --with-gallium-drivers=$GLL_DRV \
+    --with-egl-platforms="drm,x11" &&
+  unset GLL_DRV
+}
+
+function make_commands()
+{
+  make
+}
+
+function test_commands()
+{
+  make check
+}
+
+function install_commands()
+{
+  make install &&
+  echo "INSTALL COMPLETE"
+}

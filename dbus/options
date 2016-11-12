@@ -1,12 +1,21 @@
 #!/bin/bash
 
+export DBUS_VER=1.10.10
+
 function configure_commands()
 {
   ./configure \
     --prefix=/usr \
     --sysconfdir=/etc \
     --libexecdir=/usr/lib/dbus-1.0 \
-    --localstatedir=/var
+    --localstatedir=/var \
+    --disable-doxygen-docs \
+    --disable-xml-docs \
+    --disable-static \
+    --disable-systemd \
+    --without-systemdsystemunitdir \
+    --with-console-auth-dir=/run/console/ \
+    --docdir=/usr/share/doc/dbus-$DBUS_VER
 }
 
 function make_commands()
@@ -22,7 +31,5 @@ function test_commands()
 function install_commands()
 {
   make install &&
-  mv -v /usr/share/doc/dbus \
-        /usr/share/doc/dbus-1.4.20
   echo "INSTALL COMPLETE"
 }

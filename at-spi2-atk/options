@@ -2,7 +2,9 @@
 
 function configure_commands()
 {
-  perl Makefile.PL
+  sed -i "/seems to be moved/s/^/#/" config/ltmain.sh &&
+  ./configure \
+    --prefix=/usr
 }
 
 function make_commands()
@@ -12,7 +14,7 @@ function make_commands()
 
 function test_commands()
 {
-  make test
+  : make check
 }
 
 function install_commands()

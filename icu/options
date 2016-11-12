@@ -1,23 +1,34 @@
 #!/bin/bash
 
+export SOURCE_DIR_PREFIX=icu
+
 function configure_commands()
 {
-  perl Makefile.PL
+  pushd source &&
+  CC=gcc CXX=g++ ./configure \
+    --prefix=/usr &&
+  popd
 }
 
 function make_commands()
 {
-  make
+  pushd source &&
+  make &&
+  popd
 }
 
 function test_commands()
 {
-  make test
+  pushd source &&
+  make check &&
+  popd
 }
 
 function install_commands()
 {
+  pushd source &&
   make install &&
+  popd &&
   echo "INSTALL COMPLETE"
 }
 

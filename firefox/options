@@ -1,28 +1,27 @@
 #!/bin/bash
 
-export FF_VERSION="28.0"
+export SOURCE_DIR_PREFIX=firefox-
+
+export FF_VERSION="49.0.2"
 
 function configure_commands()
 {
   cat > mozconfig << "EOF"
-# If you have a multicore machine, firefox will now use all the cores by
-# default. Exceptionally, you can reduce the number of cores, e.g. to 1,
-# by uncommenting the next line and setting a valid number of CPU cores.
-#mk_add_options MOZ_MAKE_FLAGS="-j1"
+# If you have a multicore machine, all cores will be used by default.
+# If desired, you can reduce the number of cores used, e.g. to 1, by
+# uncommenting the next line and setting a valid number of CPU cores.
+mk_add_options MOZ_MAKE_FLAGS="-j6"
 
-# If you have installed DBus-Glib comment out this line:
+# If you have installed dbus-glib, comment out this line:
 # ac_add_options --disable-dbus
 
-# If you have installed wireless-tools comment out this line:
+# If you have installed dbus-glib, and you have installed (or will install)
+# wireless-tools, and you wish to use geolocation web services, comment out
+# this line
 ac_add_options --disable-necko-wifi
 
-# If you have installed libnotify comment out this line:
-# ac_add_options --disable-libnotify
-
-# GStreamer is necessary for H.264 video playback in HTML5 Video Player;
-# to be enabled, also remember to set "media.gstreamer.enabled" to "true"
-# in about:config. If you have installed GStreamer comment out this line:
-# ac_add_options --disable-gstreamer
+# Uncomment this option if you wish to build with gtk+-2
+#ac_add_options --enable-default-toolkit=cairo-gtk2
 
 # Uncomment these lines if you have installed optional dependencies:
 #ac_add_options --enable-system-hunspell
@@ -31,46 +30,46 @@ ac_add_options --disable-necko-wifi
 # Comment out following option if you have PulseAudio installed
 ac_add_options --disable-pulseaudio
 
-# Uncomment this line if you compiled Cairo with --enable-tee switch and want
-# to use it instead of the bundled one:
-#ac_add_options --enable-system-cairo
-
-# If you have not installed Yasm then uncomment this line:
-# ac_add_options --disable-webm
-
-# If you have installed xulrunner uncomment the next two ac_add_options lines
-# and check that the sdk will be set by running pkg-config in a subshell
-# and has not become hardcoded or empty when you created this file
-#ac_add_options --with-system-libxul
-#ac_add_options --with-libxul-sdk=$(pkg-config --variable=sdkdir libxul)
+# If you have installed GConf, comment out this line
+#ac_add_options --disable-gconf
 
 # Comment out following options if you have not installed
 # recommended dependencies:
 ac_add_options --enable-system-sqlite
 ac_add_options --with-system-libevent
 ac_add_options --with-system-libvpx
-#ac_add_options --with-system-nspr
-#ac_add_options --with-system-nss
+ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
+ac_add_options --with-system-icu
 
-# It is recommended not to touch anything below this line
+# If you are going to apply the patch for system graphite
+# and system harfbuzz, uncomment these lines:
+#ac_add_options --with-system-graphite2
+#ac_add_options --with-system-harfbuzz
+
+# Stripping is now enabled by default.
+# Uncomment these lines if you need to run a debugger:
+#ac_add_options --disable-strip
+#ac_add_options --disable-install-strip
+
+# The BLFS editors recommend not changing anything below this line:
 ac_add_options --prefix=/usr
 ac_add_options --enable-application=browser
 
 ac_add_options --disable-crashreporter
-ac_add_options --disable-installer
 ac_add_options --disable-updater
-ac_add_options --disable-debug
 ac_add_options --disable-tests
 
 ac_add_options --enable-optimize
-ac_add_options --enable-strip
-ac_add_options --enable-install-strip
 
 ac_add_options --enable-gio
 ac_add_options --enable-official-branding
 ac_add_options --enable-safe-browsing
 ac_add_options --enable-url-classifier
 
+# From firefox-40, using system cairo causes firefox to crash
+# frequently when it is doing background rendering in a tab.
+#ac_add_options --enable-system-cairo
 ac_add_options --enable-system-ffi
 ac_add_options --enable-system-pixman
 
@@ -87,9 +86,11 @@ EOF
 
 function make_commands()
 {
-  # sed -i 's# ""##' browser/base/Makefile.in &&
-  make -f client.mk &&
-  make -C firefox-build-dir/browser/installer
+  export CFLAGS_HOLD=$CFLAGS &&
+  export CXXFLAGS_HOLD=$CXXFLAGS &&
+  export CFLAGS+=" -fno-delete-null-pointer-checks -fno-lifetime-dse -fno-schedule-insns2" &&
+  export CXXFLAGS+=" -fno-delete-null-pointer-checks -fno-lifetime-dse -fno-schedule-insns2" &&
+  make -f client.mk
 }
 
 function test_commands()
@@ -99,18 +100,9 @@ function test_commands()
 
 function install_commands()
 {
-  rm -rf /usr/lib/firefox-${FF_VERSION} &&
-  mkdir  /usr/lib/firefox-${FF_VERSION} &&
-  tar -xvf firefox-build-dir/dist/firefox-${FF_VERSION}.en-US.linux-$(uname -m).tar.bz2 \
-    -C /usr/lib/firefox-${FF_VERSION} --strip-components=1 &&
-  # chown -R -v root:root /usr/lib/firefox-${FF_VERSION} &&
-  # chmod -v 755 /usr/lib/firefox-${FF_VERSION}/libxpcom.so &&
-  ln -sfv ../lib/firefox-${FF_VERSION}/firefox /usr/bin &&
-  mkdir -pv /usr/lib/mozilla/plugins &&
-  ln -sfv ../mozilla/plugins /usr/lib/firefox-${FF_VERSION} &&
-  # echo "NPAPI Headers for gnash" &&
-  # rm -rf /usr/include/npapi &&
-  # mkdir -v /usr/include/npapi &&
-  # cp -v dom/plugins/base/*.h /usr/include/npapi &&
+  make -f client.mk install INSTALL_SDK= &&
+  chown -R 0:0 /usr/lib/firefox-${FF_VERSION}   &&
+  mkdir -pv    /usr/lib/mozilla/plugins  &&
+  ln    -sfv   ../../mozilla/plugins /usr/lib/firefox-${FF_VERSION}/browser
   echo "INSTALL COMPLETE"
 }
